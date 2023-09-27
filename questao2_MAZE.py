@@ -2,7 +2,7 @@ def solve_maze(maze, start, end):
     directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # Direções: direita, baixo, esquerda, cima
 
     def is_valid(x, y):
-        return 0 <= x < len(maze) and 0 <= y < len(maze[0]) and maze[x][y] == 0
+        return 0 <= x < len(maze) and 0 <= y < len(maze[0]) and maze[x][y] == " "
 
     def move(x, y, dir):
         return x + directions[dir][0], y + directions[dir][1]
@@ -37,15 +37,15 @@ def solve_maze(maze, start, end):
 
 # Exemplo de uso
 maze = [
-    [1, 1, 1, 1, 1],
-    [0, 0, 1, 0, 1],
-    [1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1]
+    ["#", "#", "#", "#", "#"],
+    ["#", " ", " ", " ", "#"],
+    ["#", " ", "#", " ", "#"],
+    [" ", " ", " ", " ", "#"],
+    [" ", "#", "#", "#", "#"]
 ]
 
-start = (1, 0)
-end = (3, 4)
+start = (4, 0)
+end = (2, 1)
 
 path = solve_maze(maze, start, end)
 if path:

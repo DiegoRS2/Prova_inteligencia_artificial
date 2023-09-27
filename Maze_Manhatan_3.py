@@ -2,7 +2,7 @@ def solve_maze(maze, start, end):
     directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # Direções: direita, baixo, esquerda, cima
 
     def is_valid(x, y):
-        return 0 <= x < len(maze) and 0 <= y < len(maze[0]) and maze[x][y] == 0
+        return 0 <= x < len(maze) and 0 <= y < len(maze[0]) and maze[x][y] == " "
 
     def move(x, y, dir):
         return x + directions[dir][0], y + directions[dir][1]
@@ -36,7 +36,7 @@ def solve_maze(maze, start, end):
             x, y = path[-2]
             path.pop()
         else:
-            maze[x][y] = 2  # Marcar como visitado
+            maze[x][y] = "2"  # Marcar como visitado
             last_x, last_y = x, y
             x, y = next_x, next_y
             path.append((x, y))
@@ -45,11 +45,11 @@ def solve_maze(maze, start, end):
 
 # Exemplo de uso
 maze = [
-    [1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1],
-    [0, 0, 0, 0, 1],
-    [0, 1, 1, 1, 1]
+    ["#", "#", "#", "#", "#"],
+    ["#", " ", " ", " ", "#"],
+    ["#", " ", "#", " ", "#"],
+    [" ", " ", " ", " ", "#"],
+    [" ", "#", "#", "#", "#"]
 ]
 
 start = (4, 0)

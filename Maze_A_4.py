@@ -5,11 +5,11 @@ class Maze:
     def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
-        self.maze = [[0 for _ in range(width)] for _ in range(height)]
+        self.maze = [[" " for _ in range(width)] for _ in range(height)]
 
     def add_wall(self, start: Tuple[int, int], end: Tuple[int, int]) -> None:
-        self.maze[start[0]][start[1]] = 1
-        self.maze[end[0]][end[1]] = 1
+        self.maze[start[0]][start[1]] = "#"
+        self.maze[end[0]][end[1]] = "#"
 
     def get_neighbors(self, position: Tuple[int, int]) -> List[Tuple[int, int]]:
 
@@ -17,7 +17,7 @@ class Maze:
         for dx, dy in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
             new_x = position[0] + dx
             new_y = position[1] + dy
-            if 0 <= new_x < self.width and 0 <= new_y < self.height and self.maze[new_x][new_y] == 0:
+            if 0 <= new_x < self.width and 0 <= new_y < self.height and self.maze[new_x][new_y] == " ":
                 neighbors.append((new_x, new_y))
         return neighbors
 
