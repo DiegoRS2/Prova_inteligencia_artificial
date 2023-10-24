@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tabela Verdade Personalizada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            max-width: 100%;
+            margin: 20px auto;
+            background-color: #fff;
+            border-collapse: collapse;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tabela Verdade Personalizada</h1>
+
+    <div class="container">
+        <!-- Seleciona o Conectivo Lógico -->
+        <h2>Selecione o Conectivo Lógico:</h2>
+        <select id="logicalOperator">
+            <option value="not">NÃO (¬)</option>
+            <option value="and">E (&&)</option>
+            <option value="or">OU (||)</option>
+            <option value="xor">XOR (^)</option>
+            <option value="biconditional">BICONDICIONAL (↔)</option>
+            <option value="implies">IMPLICAção (→)</option>
+        </select>
+        
+        <!-- Botão para Gerar Tabela Verdade -->
+        <button type="button" onclick="generateTruthTable()">Gerar Tabela Verdade</button>
+    </div>
+
+    <h2 class="container">Tabela Verdade</h2>
+    <table class="container" border="1" id="truthTable">
+        <thead>
+            <tr>
+                <th>P</th>
+                <th>Q</th>
+                <th>Resultado</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        // Função para gerar a tabela verdade
+        function generateTruthTable() {
+            const logicalOperator = document.getElementById("logicalOperator").value;
+            const truthTableBody = document.querySelector("#truthTable tbody");
+            truthTableBody.innerHTML = '';
+
+            // Loop para todas as combinações de P e Q
+            for (let p = 0; p <= 1; p++) {
+                for (let q = 0; q <= 1; q++) {
+                    let result;
+
+                    // Calcula o resultado com base no operador lógico selecionado
+                    switch (logicalOperator) {
+                        case "not":
+                            result = Number(!p);
+                            break;
+                        case "and":
+                            result = Number(p && q);
+                            break;
+                        case "or":
+                            result = Number(p || q);
+                            break;
+                        case "xor":
+                            result = Number((p || q) && !(p && q));
+                            break;
+                        case "biconditional":
+                            result = Number((p && q) || (!p && !q));
+                            break;
+                        case "implies":
+                            result = Number(!p || q);
+                            break;
+                    }
+
+                    // Cria uma nova linha na tabela verdade
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `<td>${p}</td><td>${q}</td><td>${result}</td>`;
+                    truthTableBody.appendChild(newRow);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
