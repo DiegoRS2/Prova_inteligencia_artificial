@@ -1,6 +1,47 @@
 import random
-import timeit
 from collections import deque
+import tkinter as tk
+import copy
+import threading
+
+def gerar_cidade_conectada(linhas, colunas):
+    cidade = [[1 for _ in range(colunas)] for _ in range(linhas)]
+
+    # Inicializa as ruas nas posições ímpares
+    for i in range(1, linhas, 2):
+        for j in range(1, colunas, 2):
+            cidade[i][j] = 0
+
+    # Gera caminhos aleatórios para conectar as ruas
+    for i in range(1, linhas, 2):
+        for j in range(1, colunas, 2):
+            direcoes = [(0, 2), (2, 0), (0, -2), (-2, 0)]
+            random.shuffle(direcoes)
+
+            for di, dj in direcoes:
+                ni, nj = i + di, j + dj
+                if 0 <= ni < linhas and 0 <= nj < colunas and cidade[ni][nj] == 0:
+                    cidade[(i + ni) // 2][(j + nj) // 2] = 0
+                    break
+
+    return cidade
+
+def exibir_cidade_grafica(cidade, nome):
+    if (cidade is None):
+        return
+
+    root = tk.Tk()
+    root.title(nome)
+
+    canvas = tk.Canvas(root, width=len(cidade[0]) * 10, height=len(cidade) * 10)
+    canvas.pack()
+
+    for i in range(len(cidade)):
+        for j in range(len(cidade[0])):
+            cor = 'white' if cidade[i][j] == 0 else 'black' if cidade[i][j] == 1 else 'green' if cidade[i][j] == 'X' else 'red' 
+            canvas.create_rectangle(j * 10, i * 10, (j + 1) * 10, (i + 1) * 10, fill=cor)
+
+    root.mainloop()
 
 # Implementação do algoritmo BFS para encontrar o caminho entre dois pontos na matriz
 def bfs_encontrar_caminho(matriz, origem, destino):
@@ -62,12 +103,10 @@ def dfs_encontrar_caminho(matriz, origem, destino):
                 if vizinho not in visitados:
                     pilha.append(vizinho)
                     caminho[vizinho] = atual
-                    # Impressão das coordenadas percorridas
                     print(f"Coordenada percorrida no DFS: {vizinho}")
 
     return None
 
-# Implementação da função auxiliar para reconstruir o caminho
 def reconstruir_caminho(caminho, origem, destino):
     caminho_encontrado = []
     atual = destino
@@ -96,6 +135,20 @@ def imprimir_caminho_encontrado(matriz, caminho):
                 print(elem, end=" ")
         print()
 
+def marcar_caminho_encontrado(matriz, caminho):
+    if caminho is None:
+        return
+    
+    matriz_temp = copy.deepcopy(matriz)
+
+    caminho_set = set(caminho)
+    for i in range(len(matriz_temp)):
+        for j in range(len(matriz_temp[0])):
+            if (i, j) in caminho_set:
+                matriz_temp[i][j] = 'X'
+    
+    return matriz_temp
+
 # Gerar uma matriz de exemplo (labirinto)
 def gerar_cidade(linhas, colunas):
     cidade = [[0 for _ in range(colunas)] for _ in range(linhas)]
@@ -122,16 +175,23 @@ colunas = 100
 cidade = gerar_cidade(linhas, colunas)
 
 
-def coloca_impedimentos(labirinto):
-   labirinto[3][5] = 2
-   labirinto[3][1] = 2
-   labirinto[3][2] = 2
-   labirinto[3][3] = 2
-   labirinto[3][0] = 2
-   labirinto[3][4] = 2
-   labirinto[3][6] = 2
-   labirinto[3][7] = 2
-   labirinto[3][8] = 2
+def coloca_impedimentos(matriz, quantidade_blocos):
+    linhas = len(matriz)
+    colunas = len(matriz[0])
+
+    # Obtém as posições de todos os campos com valor 1
+    posicoes_1 = [(i, j) for i in range(linhas) for j in range(colunas) if matriz[i][j] == 1]
+
+    # Verifica se há posições suficientes para a quantidade desejada de blocos
+    if quantidade_blocos > len(posicoes_1):
+        raise ValueError("Não há posições suficientes para adicionar a quantidade desejada de blocos.")
+
+    # Escolhe aleatoriamente posições para substituir por 2
+    posicoes_2 = random.sample(posicoes_1, quantidade_blocos)
+
+    # Substitui os valores nas posições escolhidas por 2
+    for i, j in posicoes_2:
+        matriz[i][j] = 2
 
 # Definir pontos de origem e destino aleatórios na matriz
 def pontos_aleatorios(matriz):
@@ -145,8 +205,11 @@ def pontos_aleatorios(matriz):
     return origem, destino
 
 # Testar e comparar os algoritmos com a matriz gerada
-labirinto = gerar_cidade(50,50)  # Tamanho da matriz (10x10) - pode ser ajustado
-coloca_impedimentos(labirinto)
+
+tamanho_matriz = 50
+
+labirinto = gerar_cidade_conectada(tamanho_matriz,tamanho_matriz)  # Tamanho da matriz (10x10) - pode ser ajustado
+coloca_impedimentos(labirinto, 10)
 origem, destino = pontos_aleatorios(labirinto)
 
 print("Matriz gerada:")
@@ -161,8 +224,19 @@ caminho_encontrado_bfs = bfs_encontrar_caminho(labirinto, origem, destino)
 print("\nCaminho encontrado pelo BFS:")
 imprimir_caminho_encontrado(labirinto, caminho_encontrado_bfs)
 
+caminho_city = marcar_caminho_encontrado(labirinto, caminho_encontrado_bfs)
+
+thread1 = threading.Thread(target=exibir_cidade_grafica,args=(caminho_city,'BFS'))
+
 # Encontrar o caminho usando DFS e imprimir na matriz
 print("\nExecutando DFS...")
 caminho_encontrado_dfs = dfs_encontrar_caminho(labirinto, origem, destino)
 print("\nCaminho encontrado pelo DFS:")
 imprimir_caminho_encontrado(labirinto, caminho_encontrado_dfs)
+
+caminho_city = marcar_caminho_encontrado(labirinto, caminho_encontrado_dfs)
+
+thread2 = threading.Thread(target=exibir_cidade_grafica,args=(caminho_city,'DFS'))
+
+thread1.start()
+thread2.start()
