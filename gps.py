@@ -29,6 +29,8 @@ def bfs_encontrar_caminho(matriz, origem, destino):
                 novo_caminho = list(caminho)
                 novo_caminho.append(vizinho)
                 fila.append(novo_caminho)
+                # Impressão das coordenadas percorridas
+                print(f"Coordenada percorrida no BFS: {vizinho}")
 
     return None
 
@@ -60,6 +62,8 @@ def dfs_encontrar_caminho(matriz, origem, destino):
                 if vizinho not in visitados:
                     pilha.append(vizinho)
                     caminho[vizinho] = atual
+                    # Impressão das coordenadas percorridas
+                    print(f"Coordenada percorrida no DFS: {vizinho}")
 
     return None
 
@@ -79,10 +83,8 @@ def imprimir_matriz(matriz):
         print(" ".join(str(elem) for elem in linha))
 
 # Função para imprimir o caminho encontrado na matriz
-# Função para imprimir o caminho encontrado na matriz
 def imprimir_caminho_encontrado(matriz, caminho):
     if caminho is None:
-        print("Nenhum caminho encontrado.")
         return
     
     caminho_set = set(caminho)
@@ -94,11 +96,42 @@ def imprimir_caminho_encontrado(matriz, caminho):
                 print(elem, end=" ")
         print()
 
-
 # Gerar uma matriz de exemplo (labirinto)
-def gerar_labirinto(rows, cols):
-    labirinto = [[random.randint(0, 1) for _ in range(cols)] for _ in range(rows)]
-    return labirinto
+def gerar_cidade(linhas, colunas):
+    cidade = [[0 for _ in range(colunas)] for _ in range(linhas)]
+
+    # Adiciona ruas horizontais
+    for i in range(1, linhas, 2):
+        cidade[i] = [1] * colunas
+
+    # Adiciona ruas verticais
+    for j in range(1, colunas, 2):
+        for i in range(linhas):
+            cidade[i][j] = 1
+
+    # Adiciona interseções aleatórias
+    for i in range(1, linhas, 2):
+        for j in range(1, colunas, 2):
+            cidade[i][j] = 1
+
+    return cidade
+
+# Exemplo de uso
+linhas = 100
+colunas = 100
+cidade = gerar_cidade(linhas, colunas)
+
+
+def coloca_impedimentos(labirinto):
+   labirinto[3][5] = 2
+   labirinto[3][1] = 2
+   labirinto[3][2] = 2
+   labirinto[3][3] = 2
+   labirinto[3][0] = 2
+   labirinto[3][4] = 2
+   labirinto[3][6] = 2
+   labirinto[3][7] = 2
+   labirinto[3][8] = 2
 
 # Definir pontos de origem e destino aleatórios na matriz
 def pontos_aleatorios(matriz):
@@ -112,8 +145,8 @@ def pontos_aleatorios(matriz):
     return origem, destino
 
 # Testar e comparar os algoritmos com a matriz gerada
-labirinto = gerar_labirinto(10, 10)  # Tamanho da matriz (10x10) - pode ser ajustado
-
+labirinto = gerar_cidade(50,50)  # Tamanho da matriz (10x10) - pode ser ajustado
+coloca_impedimentos(labirinto)
 origem, destino = pontos_aleatorios(labirinto)
 
 print("Matriz gerada:")
@@ -122,20 +155,14 @@ print()
 
 print(f"Origem: {origem}, Destino: {destino}")
 
-# Avaliar tempo de execução do BFS - Busca em Largura
-tempo_bfs = timeit.timeit(lambda: bfs_encontrar_caminho(labirinto, origem, destino), number=1)
-print(f"Tempo de execução do BFS: {tempo_bfs:.6f} segundos")
-
-# Avaliar tempo de execução do DFS - Busca em Profundidade
-tempo_dfs = timeit.timeit(lambda: dfs_encontrar_caminho(labirinto, origem, destino), number=1)
-print(f"Tempo de execução do DFS: {tempo_dfs:.6f} segundos")
-
-# Encontrar o caminho usando BFS e imprimir na matriz
+# Encontrar o caminho usando BFS e imprimir na mclearatriz
+print("\nExecutando BFS...")
 caminho_encontrado_bfs = bfs_encontrar_caminho(labirinto, origem, destino)
 print("\nCaminho encontrado pelo BFS:")
 imprimir_caminho_encontrado(labirinto, caminho_encontrado_bfs)
 
 # Encontrar o caminho usando DFS e imprimir na matriz
+print("\nExecutando DFS...")
 caminho_encontrado_dfs = dfs_encontrar_caminho(labirinto, origem, destino)
 print("\nCaminho encontrado pelo DFS:")
 imprimir_caminho_encontrado(labirinto, caminho_encontrado_dfs)
