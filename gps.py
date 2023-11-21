@@ -3,6 +3,7 @@ from collections import deque
 import tkinter as tk
 import copy
 import threading
+import time
 
 def gerar_cidade_conectada(linhas, colunas):
     cidade = [[1 for _ in range(colunas)] for _ in range(linhas)]
@@ -26,7 +27,7 @@ def gerar_cidade_conectada(linhas, colunas):
 
     return cidade
 
-def exibir_cidade_grafica(cidade, nome):
+def exibir_cidade_grafica(cidade, nome, origem,destino):
     if (cidade is None):
         return
 
@@ -40,7 +41,11 @@ def exibir_cidade_grafica(cidade, nome):
         for j in range(len(cidade[0])):
             cor = 'white' if cidade[i][j] == 0 else 'black' if cidade[i][j] == 1 else 'green' if cidade[i][j] == 'X' else 'red' 
             canvas.create_rectangle(j * 10, i * 10, (j + 1) * 10, (i + 1) * 10, fill=cor)
-
+            
+    canvas.create_rectangle(origem[1] * 10, origem[0] * 10, (origem[1] + 1) * 10, (origem[0] + 1) * 10, fill='blue')
+    canvas.create_rectangle(destino[1] * 10, destino[0] * 10, (destino[1] + 1) * 10, (destino[0] + 1) * 10, fill='purple')
+        
+        
     root.mainloop()
 
 # Implementação do algoritmo BFS para encontrar o caminho entre dois pontos na matriz
@@ -221,12 +226,12 @@ print(f"Origem: {origem}, Destino: {destino}")
 # Encontrar o caminho usando BFS e imprimir na mclearatriz
 print("\nExecutando BFS...")
 caminho_encontrado_bfs = bfs_encontrar_caminho(labirinto, origem, destino)
-print("\nCaminho encontrado pelo BFS:")
+print("\nCaminho encontrado pelo BFS - largura:")
 imprimir_caminho_encontrado(labirinto, caminho_encontrado_bfs)
 
 caminho_city = marcar_caminho_encontrado(labirinto, caminho_encontrado_bfs)
 
-thread1 = threading.Thread(target=exibir_cidade_grafica,args=(caminho_city,'BFS'))
+thread1 = threading.Thread(target=exibir_cidade_grafica,args=(caminho_city,'BFS - largura',origem,destino))
 
 # Encontrar o caminho usando DFS e imprimir na matriz
 print("\nExecutando DFS...")
@@ -236,7 +241,8 @@ imprimir_caminho_encontrado(labirinto, caminho_encontrado_dfs)
 
 caminho_city = marcar_caminho_encontrado(labirinto, caminho_encontrado_dfs)
 
-thread2 = threading.Thread(target=exibir_cidade_grafica,args=(caminho_city,'DFS'))
+thread2 = threading.Thread(target=exibir_cidade_grafica,args=(caminho_city,'DFS - profundidade',origem,destino))
 
 thread1.start()
+time.sleep(1)
 thread2.start()
