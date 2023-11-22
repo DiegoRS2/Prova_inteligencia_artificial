@@ -159,23 +159,54 @@ knowledge_base = And()
 for nacionalidade in nacionalidades:
     for nacionalidade_temp in nacionalidades:
         if (nacionalidade != nacionalidade_temp):
-            knowledge_base.add(And(nacionalidade, Or(pos_casas[0],pos_casas[1],pos_casas[2],pos_casas[3],pos_casas[4]),Not(And(nacionalidade_temp))))
+            knowledge_base.add(And(nacionalidade, 
+                                Or(pos_casas[0],
+                                   pos_casas[1],
+                                   pos_casas[2],
+                                   pos_casas[3],
+                                   pos_casas[4]),
+                                Not(And(nacionalidade_temp))))
 
     for nacionalidade_temp in nacionalidades:
         if (nacionalidade != nacionalidade_temp):
-            knowledge_base.add(And(nacionalidade, Or(cor_casas[0],cor_casas[1],cor_casas[2],cor_casas[3],cor_casas[4]),Not(And(nacionalidade_temp))))
+            knowledge_base.add(And(nacionalidade, 
+                                   
+                                   Or(cor_casas[0],
+                                      cor_casas[1],
+                                      cor_casas[2],
+                                      cor_casas[3],
+                                      cor_casas[4]),
+                                   Not(And(nacionalidade_temp))))
 
     for nacionalidade_temp in nacionalidades:
         if (nacionalidade != nacionalidade_temp):
-            knowledge_base.add(And(nacionalidade, Or(bebidas[0],bebidas[1],bebidas[2],bebidas[3],bebidas[4]),Not(And(nacionalidade_temp))))
+            knowledge_base.add(And(nacionalidade, 
+                                    Or(bebidas[0],
+                                       bebidas[1],
+                                       bebidas[2],
+                                       bebidas[3],
+                                       bebidas[4]),
+                                    Not(And(nacionalidade_temp))))
 
     for nacionalidade_temp in nacionalidades:
         if (nacionalidade != nacionalidade_temp):
-            knowledge_base.add(And(nacionalidade, Or(cigarros[0],cigarros[1],cigarros[2],cigarros[3],cigarros[4]),Not(And(nacionalidade_temp))))
+            knowledge_base.add(And(nacionalidade, 
+                                Or(cigarros[0],
+                                   cigarros[1],
+                                   cigarros[2],
+                                   cigarros[3],
+                                   cigarros[4]),
+                                Not(And(nacionalidade_temp))))
 
     for nacionalidade_temp in nacionalidades:
         if (nacionalidade != nacionalidade_temp):
-            knowledge_base.add(And(nacionalidade, Or(profissoes[0],profissoes[1],profissoes[2],profissoes[3],profissoes[4]),Not(And(nacionalidade_temp))))
+            knowledge_base.add(And(nacionalidade, 
+                                   Or(profissoes[0],
+                                      profissoes[1],
+                                      profissoes[2],
+                                      profissoes[3],
+                                      profissoes[4]),
+                                   Not(And(nacionalidade_temp))))
 
 
 def model_check(knowledge, query):
@@ -214,45 +245,6 @@ def model_check(knowledge, query):
 
     # Check that knowledge entails query
     return check_all(knowledge, query, symbols, dict())
-
-# for nacionalidade in nacionalidades:
-#     knowledge_base = And(nacionalidade, Or())
-
-#pos_casa1 = 1
-#pos_casa2 = 2
-#pos_casa3 = 3
-#pos_casa4 = 4
-#pos_casa5 = 5
-
-#britanico = 1
-#suico = 2
-#dinamarquês = 3
-#norueguês = 4
-#alemão = 5
-
-#casa vermelha = 1
-#casa verde = 2
-#casa branca = 3
-#casa amarela = 4
-#casa azul = 5
-
-#empresario = 1
-#mecanico = 2
-#professor = 3
-#programador = 4
-#medico = 5
-
-#leite = 1
-#cafe = 2
-#cha = 3
-#cerveja = 4
-#agua = 5
-
-#Blends = 1
-#Pall Mall = 2
-#Dunhill = 3
-#Prince = 4
-#Bluemasters = 5
 
 # Definição das sentenças lógicas representando as informações adicionais
 knowledge_base.conjuncts.append(And(
